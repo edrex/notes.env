@@ -1,40 +1,57 @@
 {
-  description = "Notes bundle";
-
+  description = "An small software environment for working with a notes directory";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     emanote.url = "github:srid/emanote";
-    nixpkgs.follows = "emanote/nixpkgs";
-    flake-utils.follows = "emanote/flake-utils";
   };
-
-  # nixConfig = {
-  #   binaryCaches = [ "https://srid.cachix.org" ];
-  #   binaryCachePublicKeys = [ "srid.cachix.org-1:MTQ6ksbfz3LBMmjyPh0PLmos+1x+CdtJxA/J2W+PQxI=" ];
-  # };
-
-  outputs = { self, nixpkgs, flake-utils, emanote }:
+  nixConfig = {
+    binaryCaches = [ "https://srid.cachix.org" ];
+    binaryCachePublicKeys = [ "srid.cachix.org-1:MTQ6ksbfz3LBMmjyPh0PLmos+1x+CdtJxA/J2W+PQxI=" ];
+  };
+  outputs = inputs@{ self, nixpkgs, flake-utils, emanote, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system}; in
       rec {
-        defaultApp = apps.live;
+        defaultApp = apps.main;
+        defaultPackage = defaultApp.script;
         apps = {
-          live = rec {
+          main = rec {
             type = "app";
-            # '' is required for escaping ${} in nix
+            menu = ((pkgs.formats.yaml {}).generate "menu.yaml" {
+              pages = {
+                root = {
+                  title = "Hi";
+                  groups = [
+                    {
+                      title = "Favorites";
+                      entries = [
+                        {
+                          shortcut = "s";
+                          title = "Serve";
+                          command = "${emanote.defaultPackage.${system}}/bin/emanote run --port 7072";
+                          # mode = "background";
+                        }
+                      ];
+                    }
+                  ];
+                };
+              };
+            });
             script = pkgs.writeShellApplication {
-              name = "emanoteRun.sh";
+              name = "notesdir";
               text = ''
                 set -xe
-                export PORT="''${EMANOTE_PORT:-7072}"
-                ${emanote.defaultPackage.${system}}/bin/emanote run --port "$PORT"
+                ${pkgs.tydra}/bin/tydra ${menu}
               '';
             };
-            program = "${script}/bin/emanoteRun.sh";
+            program = "${script}/bin/notesdir";
           };
         };
         devShell = pkgs.mkShell {
-          buildInputs = [ pkgs.nixpkgs-fmt ];
+          buildInputs = [
+            pkgs.tydra
+            emanote.defaultPackage.${system}
+          ];
         };
       }
     );
