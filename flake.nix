@@ -10,8 +10,11 @@
   };
   outputs = inputs@{ self, nixpkgs, flake-utils, emanote, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system}; in
-      rec {
+      let
+        pkgs = nixpkgs.legacyPackages.${system}.extend (final: prev: {
+          emanote = emanote.defaultPackage.${system};
+        });
+      in rec {
         defaultApp = apps.main;
         defaultPackage = defaultApp.script;
         apps = {
@@ -70,7 +73,7 @@
             # TODO: load .env (port number etc) (or just check for existing value before setting env vars)
             script = pkgs.writeShellApplication {
               name = "notesdir";
-              runtimeInputs = with pkgs; [tydra tmux emanote.defaultPackage.${system}];
+              runtimeInputs = with pkgs; [tydra tmux emanote];
               text = ''
                 set -xe
                 TMUX_SOCKET="notesdir.tmux.socket"
