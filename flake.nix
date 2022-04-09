@@ -32,6 +32,11 @@
                           title = "tmux";
                           return = "tmux";
                         }
+                        {
+                          shortcut = "`";
+                          title = "shell";
+                          command = "fish";
+                        }
                       ];
                     }
                   ];
@@ -65,23 +70,19 @@
             # TODO: load .env (port number etc) (or just check for existing value before setting env vars)
             script = pkgs.writeShellApplication {
               name = "notesdir";
+              runtimeInputs = with pkgs; [tydra tmux emanote.defaultPackage.${system}];
               text = ''
                 set -xe
                 TMUX_SOCKET="notesdir.tmux.socket"
                 TMUX_SESSION="$(basename "$PWD")-$(echo "$PWD" | sha1sum | cut -f1 -d ' ')"
+                SHELL="${SHELL:-bash}"
                 export TMUX_SOCKET TMUX_SESSION
-                ${pkgs.tmux}/bin/tmux -L "$TMUX_SOCKET" has-session -t "$TMUX_SESSION" || ${pkgs.tmux}/bin/tmux -L "$TMUX_SOCKET" new-session -s "$TMUX_SESSION" -dAD -n emanote ${emanote.defaultPackage.${system}}/bin/emanote run --port 7072
-                ${pkgs.tydra}/bin/tydra --ignore-exit-status ${menu}
+                tmux -L "$TMUX_SOCKET" has-session -t "$TMUX_SESSION" || tmux -L "$TMUX_SOCKET" new-session -s "$TMUX_SESSION" -dAD -n emanote emanote run --port 7072
+                tydra --ignore-exit-status ${menu}
               '';
             };
             program = "${script}/bin/notesdir";
           };
-        };
-        devShell = pkgs.mkShell {
-          buildInputs = [
-            pkgs.tydra
-            emanote.defaultPackage.${system}
-          ];
         };
       }
     );
