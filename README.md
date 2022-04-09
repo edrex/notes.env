@@ -1,3 +1,5 @@
+# notesdir
+
 A small software environment for your plain-text notes directory.
 
 ## Design
@@ -82,15 +84,30 @@ The menu should be self-documenting. If you want to run something that's not in 
 
 ## Proving out technology
 
-Much of what I want to test out is covered at https://zimbatm.com/notes/nixflakes.
+### Flakes
+
+See https://zimbatm.com/notes/nixflakes for a concise intro to some of the important parts.
 
 - [x] nix run (runnable)
 - [x] installable
+- [ ] shell
+  - [x] launch from menu
+  - [ ] set prompt to indicate status (starship or sim?)
+- [ ] how to run the shell via direnv
+- [ ] home manager
+- [ ] An example flake for bundling this with your own wiki ?
 - [ ] first party binary cache
   - [ ] CI to populate
   - [ ] Include with flake https://github.com/NixOS/nix/issues/5507
-- [ ] how to run the shell via direnv
-- [ ] manage background services from menu
-- [ ] home manager
-- [ ] An example flake for bundling this with your own wiki ?
 
+### Mux
+
+- [x] auto launch dir-scoped singleton service manager with services on startup
+- [ ] Multi-pane env (ala emacs minibuffer etc) via tmux
+- [ ] show service+manager statuses (in menu, or maybe in a status line? emoji?)
+  - [ ] manage services from menu (stop, start, show)
+
+### Process
+
+- Feature branches / PRs for first party changes
+- Changelog workflow
