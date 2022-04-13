@@ -1,5 +1,5 @@
 {
-  description = "A small software environment for your plain-text notes directory";
+  description = "A small software environment for your plain-text notes";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     emanote.url = "github:srid/emanote";
@@ -14,6 +14,7 @@
         pkgs = nixpkgs.legacyPackages.${system}.extend (final: prev: {
           emanote = emanote.defaultPackage.${system};
         });
+        terminalBrowser = "${pkgs.links2}/bin/links";
       in rec {
         defaultApp = apps.main;
         defaultPackage = defaultApp.script;
@@ -39,6 +40,11 @@
                           shortcut = "`";
                           title = "shell";
                           command = "fish";
+                        }
+                        {
+                          shortcut = "b";
+                          title = "browsers";
+                          command = "${terminalBrowser} http://localhost:7072";
                         }
                       ];
                     }
@@ -72,7 +78,12 @@
             # TODO: load .env (port number etc) (or just check for existing value before setting env vars)
             script = pkgs.writeShellApplication {
               name = "notesdir";
-              runtimeInputs = with pkgs; [tydra tmux emanote];
+              runtimeInputs = with pkgs; [
+                tydra
+                tmux
+                emanote
+                terminalBrowser
+              ];
               text = ''
                 set -xe
                 TMUX_SOCKET="notesdir.tmux.socket"
