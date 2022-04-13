@@ -1,13 +1,13 @@
 # notesflow
 
-A **portable**, **minimal**, **sufficient**, and **discoverable** flow for your **notes**.
+Activity flows for your notes
 
-- [ ] NeoVIM-based 
-- [ ] Search full-text * metadata facets
-- [ ] Fix nits ("Must have a title", "No dangling links") via an interactive linter system
-- [ ] Commit local changes
-- [ ] Manage draft branches
-- [ ] Review incoming change requests
+- [ ] Capture/edit (NeoVIM)
+- [ ] Preview/Browse (emanote)
+- [ ] Search (telescope)
+- [ ] Filter (facets)
+- [ ] Push
+- [ ] Review (linter, PR mod queue)
 
 ## Install
 ### With nix
@@ -40,49 +40,53 @@ notesdir
 
 The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
 
-
 ## Roadmap
 
-### v0.0.1 poc
+### v0.0.0 menu
 
 - [x] tydra menu
    - [x] shell script to run
    - [x] gen menu from nix attrset via toYAML https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix
-- [x] `` ` `` shell (requires refactoring derivation)
-- [x] `p` preview (links)
 
-### v0.0.2 nvim
+### v0.0.1 shell
+- [x] `` ` `` shell (refactor derivation)
+- [x] start persistent env service manager (tmux instance) on first run
+  - [x] start emanote in tmux
+- [x] `s` tmux attach (later this will be the services menu)
+- [ ] `q` clean up background services and exit
+
+### v0.0.2 editor
+- [ ] Figure out how to configure neovim without NixOS/Home-manager modules
+  - Crib from https://github.com/nix-community/neovim-nightly-overlay/pull/112/files
+  - https://github.com/jordanisaacs/neovim-flake
 - [ ] `e` launch nvim
   - [ ] launch nvim server on first run
-- [ ] `SPC` "leader menu" (using https://github.com/Iron-E/nvim-libmodal/blob/master/doc/libmodal.txt)
-- [ ] `SPC /` find notes (telescope, basic)
-
-### v0.0.3 neomux
-- [ ] port POC to nvim
-  - [ ] launch emanote background service on first run (managed by nvim server)
-    - [ ] `SPC s d` clean up env services
-  - [ ] ``SPC ` `` terminal (below)
-  - [ ] Neomux shortcuts/modes (TODO)
-
-### v0.0.4 WikiLinks
-- [ ] Evaluate existing implementations (ref https://github.com/srid/emanote/discussions/237#discussioncomment-2024104)
-- [ ] Shortcut to traverse wikilinks
+- [ ] Shortcut to traverse wikilinks (ref https://github.com/srid/emanote/discussions/237#discussioncomment-2024104)
 - [ ] `, b` Backlinks (ask Emanote show, with Telescope)
+
+### v0.0.3 modes
+- [ ] `\` "global leader menu" (I think) [which-key](https://github.com/folke/which-key.nvim) not [nvim-libmodal](https://github.com/Iron-E/nvim-libmodal) but maybe both?
+- [ ] `\ /` find notes (telescope, basic)
 
 ## Planned
 
-### Epic: Branches
+### linter
+- [ ] https://pre-commit.com/
+- [ ] Emanote checks
+- [ ] Profit?
+
+### version control
 
 - [ ] `b` branches
   - [ ] `b` open a new draft branch
   - [ ] `/` search branches
   - [ ] `r` review change requests (`gh pr list`)
 
-### Epic: Facetted Search
-- [ ] `SPC f` Facetted search (via `emanote metadata`)
+### facetted search
+- [ ] `\ f` Facetted search (via either `curl /-/export.json | jq ...`  or proposed `emanote query` client mode [TODO:link issue])
   - [ ] Search for suitable existing filter UI implementation
-  - [ ] Eval https://github.com/mickael-menu/zk as facetting backends. Both or just Emanote?
-  - [ ] `/` push mode stack to telescope (`ESC` returns to facets)
+  - [ ] Eval https://github.com/mickael-menu/zk as facetting backend. Both or just Emanote?
+  - [ ] `/` push telescope onto mode stack (`ESC` returns to facets)
     - [ ] `a` All notes (reset filters)
     - [ ] `s` Statuses
       - [ ] `w` Working copy `git status`
@@ -99,16 +103,20 @@ The menu should be self-documenting. If you want to run something that's not in 
 
 ## Flake.. Flows?
 
-This project is a technology demonstration for a new method of composing reproducible, portable software environments using [nix flakes](https://zimbatm.com/notes/nixflakes).
+[notesflow](https://github.com/flakeflows/notesflow) is a technology demonstration for a new method of composing interactive software environments, using [nix flakes](https://zimbatm.com/notes/nixflakes).
 
-Expect parts to be factored out into a helper flake for constructing other flows.
+Utility functions will be factored out into a flakeflow library, along with this section of the README.
 
 ### Design Principles
 
-- Isolated environment
-- Batteries Included 
-- Self-contained, minimal dependencies on environment
-- Discoverability of all (most) functionality via a single entry point (menu).
+- Reliable:
+  - Runtimes depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
+  - Adapt to the runtime: do the right thing on Linux, Docker, OSX, Android etc
+  - Provide comprehensible feedback on bad input.
+- Ergonomic:
+  - Efficiently flow through a network of related task modes.
+  - Discover all flows via root mode.
+- Composable, so you can sample [like Rza](https://www.youtube.com/watch?v=jSEs8-46Qlo)).
 
 ### Technology demonstrations
 
