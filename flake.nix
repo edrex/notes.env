@@ -51,7 +51,7 @@
                   ];
                 };
                 tmux = {
-                  title = "notesdir > tmux";
+                  title = "tmux";
                   groups = [
                     {
                       entries = [
@@ -77,7 +77,7 @@
             # TODO: display tmux status
             # TODO: load .env (port number etc) (or just check for existing value before setting env vars)
             script = pkgs.writeShellApplication {
-              name = "notesdir";
+              name = "notesflow";
               runtimeInputs = with pkgs; [
                 tydra
                 tmux
@@ -86,7 +86,7 @@
               ];
               text = ''
                 set -xe
-                TMUX_SOCKET="notesdir.tmux.socket"
+                TMUX_SOCKET="notesflow.tmux.socket"
                 TMUX_SESSION="$(basename "$PWD")-$(echo "$PWD" | sha1sum | cut -f1 -d ' ')"
                 SHELL="${SHELL:-bash}"
                 export TMUX_SOCKET TMUX_SESSION
@@ -94,7 +94,7 @@
                 tydra --ignore-exit-status ${menu}
               '';
             };
-            program = "${script}/bin/notesdir";
+            program = "${script}/bin/notesflow";
           };
         };
       }

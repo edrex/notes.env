@@ -1,29 +1,13 @@
-# notesdir
+# notesflow
 
-A small software environment for your plain-text notes directory.
+A **portable**, **minimal**, **sufficient**, and **discoverable** flow for your **notes**.
 
-## Design
-
-### Criteria
-
-- Context is current directory
-- Self-contained, minimal dependencies on environment
-- Discoverability of all (most) functionality via a single entry point (menu).
-- Linters to ensure wanted data invariants
-
-### Implicit assumptions
-
-- For now, I'm assuming this will be run on a directory containing markdown files, with various extensions optionally supported. Later, I would like to loosen this assumption to work with any files present (org, media, etc) and use the linters to help users shephard their wikis into the shape they want.
-
-### Open questions
-
-Support multiple entry points:
-
- - Menu
- - Env Shell
- - One-off command
-
-Maybe one exe with `-s` and `-c` flags? Tydra needs a flag to run a command on a page.
+- [ ] NeoVIM-based 
+- [ ] Search full-text * metadata facets
+- [ ] Fix nits ("Must have a title", "No dangling links") via an interactive linter system
+- [ ] Commit local changes
+- [ ] Manage draft branches
+- [ ] Review incoming change requests
 
 ## Install
 ### With nix
@@ -36,11 +20,11 @@ Maybe one exe with `-s` and `-c` flags? Tydra needs a flag to run a command on a
 
 #### Try
 
-`nix run github:edrex/notesdir`
+`nix run github:flakeflows/notesflow`
 
 #### Install
 
-`nix profile install github:edrex/notesdir`
+`nix profile install github:flakeflows/notesflow`
 
 ### As a bundle
 
@@ -57,57 +41,87 @@ notesdir
 The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
 
 
-## Milestones
+## Roadmap
 
-### M0
+### v0.0.1 poc
 
 - [x] tydra menu
    - [x] shell script to run
    - [x] gen menu from nix attrset via toYAML https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix
-- [x] launch background service on startup (tmux) first pass
-- [ ] (\`) shell (requires refactoring derivation)
+- [x] `` ` `` shell (requires refactoring derivation)
+- [x] `p` preview (links)
 
-### M1
+### v0.0.2 nvim
+- [ ] `e` launch nvim
+  - [ ] launch nvim server on first run
+- [ ] `SPC` "leader menu" (using https://github.com/Iron-E/nvim-libmodal/blob/master/doc/libmodal.txt)
+- [ ] `SPC /` find notes (telescope, basic)
 
-- [ ] (g)en
-- [ ] (/) search (fzf?) 
+### v0.0.3 neomux
+- [ ] port POC to nvim
+  - [ ] launch emanote background service on first run (managed by nvim server)
+    - [ ] `SPC s d` clean up env services
+  - [ ] ``SPC ` `` terminal (below)
+  - [ ] Neomux shortcuts/modes (TODO)
 
-### Feature ideas
+### v0.0.4 WikiLinks
+- [ ] Evaluate existing implementations (ref https://github.com/srid/emanote/discussions/237#discussioncomment-2024104)
+- [ ] Shortcut to traverse wikilinks
+- [ ] `, b` Backlinks (ask Emanote show, with Telescope)
 
-## Functions
+## Planned
 
-- [ ] https://github.com/mickael-menu/zk (menu)
-- [ ] neovim config
-- toggles
-- watcher (commit, push, etc)
-- Bundle a self-contained editor + config (neovim or evil emacs) (but also bring your own editor via env vars)
+### Epic: Branches
 
-## Proving out technology
+- [ ] `b` branches
+  - [ ] `b` open a new draft branch
+  - [ ] `/` search branches
+  - [ ] `r` review change requests (`gh pr list`)
 
-### Flakes
+### Epic: Facetted Search
+- [ ] `SPC f` Facetted search (via `emanote metadata`)
+  - [ ] Search for suitable existing filter UI implementation
+  - [ ] Eval https://github.com/mickael-menu/zk as facetting backends. Both or just Emanote?
+  - [ ] `/` push mode stack to telescope (`ESC` returns to facets)
+    - [ ] `a` All notes (reset filters)
+    - [ ] `s` Statuses
+      - [ ] `w` Working copy `git status`
+      - [ ] `p` Published
+    - [ ] Tags
+    - [ ] By Type
+      - [ ] Markdown
+      - [ ] Ledger (https://www.ledger-cli.org/)
+      - [ ] Images
+      - [ ] Videos
+      - [ ] Audio
+      - [ ] Templates
+      - [ ] Metadata
 
-See https://zimbatm.com/notes/nixflakes for a concise intro to some of the important parts.
+## Flake.. Flows?
+
+This project is a technology demonstration for a new method of composing reproducible, portable software environments using [nix flakes](https://zimbatm.com/notes/nixflakes).
+
+Expect parts to be factored out into a helper flake for constructing other flows.
+
+### Design Principles
+
+- Isolated environment
+- Batteries Included 
+- Self-contained, minimal dependencies on environment
+- Discoverability of all (most) functionality via a single entry point (menu).
+
+### Technology demonstrations
 
 - [x] nix run (runnable)
 - [x] installable
-- [ ] shell
-  - [x] launch from menu
-  - [ ] set prompt to indicate status (starship or sim?)
-- [ ] how to run the shell via direnv
-- [ ] home manager
-- [ ] An example flake for bundling this with your own wiki ?
+- [x] srid cache
+- [ ] ENV-based configuration
+  - [ ] Load `.env` in bootstrap script
+  - [ ] `BROWSER=`
+  - [ ] `CONTENT_VALIDATORS=` or something
+- [ ] Usable as a library in your own flake
+  - [ ] home manager module
+  - [ ] expose constructor as flake API
 - [ ] first party binary cache
   - [ ] CI to populate
   - [ ] Include with flake https://github.com/NixOS/nix/issues/5507
-
-### Mux
-
-- [x] auto launch dir-scoped singleton service manager with services on startup
-- [ ] Multi-pane env (ala emacs minibuffer etc) via tmux
-- [ ] show service+manager statuses (in menu, or maybe in a status line? emoji?)
-  - [ ] manage services from menu (stop, start, show)
-
-### Process
-
-- Feature branches / PRs for first party changes
-- Changelog workflow
