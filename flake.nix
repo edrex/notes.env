@@ -13,89 +13,43 @@
       let
         pkgs = nixpkgs.legacyPackages.${system}.extend (final: prev: {
           emanote = emanote.defaultPackage.${system};
+          neovim-notes = final.wrapNeovimUnstable final.neovim-unwrapped (final.neovimUtils.makeNeovimConfig {
+            plugins = with final.vimPlugins; [
+              { plugin = telescope-nvim; }
+            ];
+          });
         });
+        shellPkgs = with pkgs; [
+          tydra
+          tmux
+          emanote
+          links2
+          neovim-notes
+        ];
         terminalBrowser = "${pkgs.links2}/bin/links";
+
+        
+
       in rec {
+        lib = pkgs.callPackage ./lib.nix {};
+        menu = lib.mkTydraMenu (import ./menu.nix { inherit terminalBrowser shellPkgs;});
         defaultApp = apps.main;
         defaultPackage = defaultApp.script;
-        apps = {
-          main = rec {
-            type = "app";
-            menu = ((pkgs.formats.yaml {}).generate "menu.yaml" {
-              global = {
-              };
-              pages = {
-                root = {
-                  title = "notesdir";
-                  groups = [
-                    {
-                      title = "Favorites";
-                      entries = [
-                        {
-                          shortcut = "t";
-                          title = "tmux";
-                          return = "tmux";
-                        }
-                        {
-                          shortcut = "`";
-                          title = "shell";
-                          command = "fish";
-                        }
-                        {
-                          shortcut = "b";
-                          title = "browsers";
-                          command = "${terminalBrowser} http://localhost:7072";
-                        }
-                      ];
-                    }
-                  ];
-                };
-                tmux = {
-                  title = "tmux";
-                  groups = [
-                    {
-                      entries = [
-                        {
-                          shortcut = "a";
-                          title = "attach (press C-b d to return to this menu!)";
-                          command = "tmux -L \"$TMUX_SOCKET\" a -t \"$TMUX_SESSION\"";
-                          return = "root";
-                        }
-                        {
-                          shortcut = "q";
-                          title = "return to main menu";
-                          return = "root";
-                        }
-                      ];
-                    }
-                  ];
-                };
-              };
-            });
-            # TODO: pull out bin/notesmenu
-            # TODO: pull out envmux script
-            # TODO: display tmux status
-            # TODO: load .env (port number etc) (or just check for existing value before setting env vars)
-            script = pkgs.writeShellApplication {
-              name = "notesflow";
-              runtimeInputs = with pkgs; [
-                tydra
-                tmux
-                emanote
-                terminalBrowser
-              ];
-              text = ''
-                set -xe
-                TMUX_SOCKET="notesflow.tmux.socket"
-                TMUX_SESSION="$(basename "$PWD")-$(echo "$PWD" | sha1sum | cut -f1 -d ' ')"
-                SHELL="${SHELL:-bash}"
-                export TMUX_SOCKET TMUX_SESSION
-                tmux -L "$TMUX_SOCKET" has-session -t "$TMUX_SESSION" || tmux -L "$TMUX_SOCKET" new-session -s "$TMUX_SESSION" -dAD -n emanote emanote run --port 7072
-                tydra --ignore-exit-status ${menu}
-              '';
-            };
-            program = "${script}/bin/notesflow";
-          };
+        apps.main = pkgs.writeShellApplication {
+          name = "notesflow";
+          runtimeInputs = shellPkgs;
+          text = ''
+            set -xe
+            TMUX_SOCKET="notesflow.tmux.socket"
+            TMUX_SESSION="$(basename "$PWD")-$(echo "$PWD" | sha1sum | cut -f1 -d ' ')"
+            SHELL="${SHELL:-bash}"
+            export TMUX_SOCKET TMUX_SESSION
+            tmux -L "$TMUX_SOCKET" has-session -t "$TMUX_SESSION" || tmux -L "$TMUX_SOCKET" new-session -s "$TMUX_SESSION" -dAD -n emanote emanote run --port 7072
+            tydra --ignore-exit-status ${menu}
+          '';
+        };
+        devShell = pkgs.mkShell {
+          packages = shellPkgs;
         };
       }
     );
