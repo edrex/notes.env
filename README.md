@@ -117,15 +117,22 @@ See [](docs/v0.0.3.md)
       - [ ] Templates
       - [ ] Metadata
 
-Candidates:
+### Composable
+
+This means:
+- Expose internal implementations so they can be used externally
+  - neovimConfig
+  - tydra menus
+  - desktop files for for builtin terminal, browser implementations
+  - library functions (extract where reuseful)
+- Allow the injection of dependencies (bring your own terminal launcher etc)
+  - At build-time, via the nix constructors
+  - At run-time, via ENV vars
+    - Maybe call xdg-run et al (this could be one build-time implementation of an "opener")
 
 ### Ideas
 
-- Expose neovimConfig
-- Expose desktop files for terminal, browser
-- Call xdg-run et al
-
-
+- A utility function that does build-time evaluation or lazy runtime evaluation depending on a global flag. This would allow the whole system to be built lazy.
 
 ## Flake.. Flows?
 
@@ -136,7 +143,7 @@ Utility functions will be factored out into a flakeflow library, along with this
 ### Design Principles
 
 - Reliable:
-- Depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
+  - Depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
   - Adapt to the runtime: do the right thing on Linux, Docker, OSX, Android etc
   - Provide comprehensible feedback on bad input.
 - Ergonomic:
@@ -154,13 +161,13 @@ Utility functions will be factored out into a flakeflow library, along with this
   - [ ] `BROWSER=`
   - [ ] `CONTENT_VALIDATORS=` or something
 - [ ] Usable as a library in your own flake
-  - [ ] home manager module
   - [ ] expose constructor as flake API
+  - [ ] home manager module for registering services etc
 - [ ] First party build cache
   - [ ] CI builds
   - [ ] Cache builds
   - [ ] Add to flake
- [ ] linux VM for linuxey stuff
+ [ ] linux VM for linuxey stuff? Is this crazy pants?
   - https://github.com/nix-community/nixos-generators (vm subcommand)
   - https://github.com/lima-vm/lima
   - Accelerated access to host FS? Esp inotify for baloo etc.
