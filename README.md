@@ -9,6 +9,8 @@ Activity flows for your notes
 - [ ] Push
 - [ ] Review (linter, PR mod queue)
 
+Note the empty boxes above. This is WIP POC software. Help me fill those boxes!
+
 ## Install
 ### With nix
 #### Preconditions
@@ -52,8 +54,10 @@ The menu should be self-documenting. If you want to run something that's not in 
 - [x] `` ` `` shell (refactor derivation)
 - [x] start persistent env service manager (tmux instance) on first run
   - [x] start emanote in tmux
+  - [ ] if tmux exits with a bad status, display error
+  - [ ] if emanote errs, display log
 - [x] `s` tmux attach (later this will be the services menu)
-- [ ] `q` clean up background services and exit
+- [x] `q` clean up background services and exit
 
 ### v0.0.2 editor
 - [ ] Figure out how to configure neovim without NixOS/Home-manager modules
@@ -65,15 +69,18 @@ The menu should be self-documenting. If you want to run something that's not in 
 - [ ] `, b` Backlinks (ask Emanote show, with Telescope)
 
 ### v0.0.3 modes
+
+See [](docs/v0.0.3.md)
 - [ ] `\` "global leader menu" (I think) [which-key](https://github.com/folke/which-key.nvim) not [nvim-libmodal](https://github.com/Iron-E/nvim-libmodal) but maybe both?
 - [ ] `\ /` find notes (telescope, basic)
 
 ## Planned
 
 ### linter
-- [ ] https://pre-commit.com/
+- [ ] Interface: https://pre-commit.com/
+- [ ] Manage local repo hooks interactively
 - [ ] Emanote checks
-- [ ] Profit?
+- [ ] Interactive resolvers?
 
 ### version control
 
@@ -83,9 +90,18 @@ The menu should be self-documenting. If you want to run something that's not in 
   - [ ] `r` review change requests (`gh pr list`)
 
 ### facetted search
-- [ ] `\ f` Facetted search (via either `curl /-/export.json | jq ...`  or proposed `emanote query` client mode [TODO:link issue])
-  - [ ] Search for suitable existing filter UI implementation
-  - [ ] Eval https://github.com/mickael-menu/zk as facetting backend. Both or just Emanote?
+
+- [ ] `\ f` Facetted search
+  - [ ] Implementations research:
+    - emanote query (proposed) or `curl ${emanote_service}/-/export.json | jq ...` 
+    - facetted desktop search engine: (TODO: figure out persistent / cache dirs for index etc )
+      - https://www.lesbonscomptes.com/recoll/
+        - TODO: build on mac https://framagit.org/medoc92/recoll/-/blob/master/packaging/mac/make-recoll-dmg.sh
+        - https://www.lesbonscomptes.com/recoll/usermanual/webhelp/docs/RCL.SEARCH.COMMANDLINE.html
+    - Feed emanote into baloo?
+
+    -  https://github.com/mickael-menu/zk as facetting backend? Not sure it's adding beyond emanote, but worth testing.
+
   - [ ] `/` push telescope onto mode stack (`ESC` returns to facets)
     - [ ] `a` All notes (reset filters)
     - [ ] `s` Statuses
@@ -101,6 +117,16 @@ The menu should be self-documenting. If you want to run something that's not in 
       - [ ] Templates
       - [ ] Metadata
 
+Candidates:
+
+### Ideas
+
+- Expose neovimConfig
+- Expose desktop files for terminal, browser
+- Call xdg-run et al
+
+
+
 ## Flake.. Flows?
 
 [notesflow](https://github.com/flakeflows/notesflow) is a technology demonstration for a new method of composing interactive software environments, using [nix flakes](https://zimbatm.com/notes/nixflakes).
@@ -110,7 +136,7 @@ Utility functions will be factored out into a flakeflow library, along with this
 ### Design Principles
 
 - Reliable:
-  - Runtimes depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
+- Depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
   - Adapt to the runtime: do the right thing on Linux, Docker, OSX, Android etc
   - Provide comprehensible feedback on bad input.
 - Ergonomic:
@@ -130,6 +156,13 @@ Utility functions will be factored out into a flakeflow library, along with this
 - [ ] Usable as a library in your own flake
   - [ ] home manager module
   - [ ] expose constructor as flake API
-- [ ] first party binary cache
-  - [ ] CI to populate
-  - [ ] Include with flake https://github.com/NixOS/nix/issues/5507
+- [ ] First party build cache
+  - [ ] CI builds
+  - [ ] Cache builds
+  - [ ] Add to flake
+ [ ] linux VM for linuxey stuff
+  - https://github.com/nix-community/nixos-generators (vm subcommand)
+  - https://github.com/lima-vm/lima
+  - Accelerated access to host FS? Esp inotify for baloo etc.
+    - https://github.com/lima-vm/lima/issues/20#issuecomment-845781236
+    - https://docs.docker.com/desktop/mac/release-notes/#docker-desktop-460
