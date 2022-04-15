@@ -1,29 +1,15 @@
-# notesdir
+# notesflow
 
-A small software environment for your plain-text notes directory.
+Activity flows for your notes
 
-## Design
+- [ ] Capture/edit (NeoVIM)
+- [ ] Preview/Browse (emanote)
+- [ ] Search (telescope)
+- [ ] Filter (facets)
+- [ ] Push
+- [ ] Review (linter, PR mod queue)
 
-### Criteria
-
-- Context is current directory
-- Self-contained, minimal dependencies on environment
-- Discoverability of all (most) functionality via a single entry point (menu).
-- Linters to ensure wanted data invariants
-
-### Implicit assumptions
-
-- For now, I'm assuming this will be run on a directory containing markdown files, with various extensions optionally supported. Later, I would like to loosen this assumption to work with any files present (org, media, etc) and use the linters to help users shephard their wikis into the shape they want.
-
-### Open questions
-
-Support multiple entry points:
-
- - Menu
- - Env Shell
- - One-off command
-
-Maybe one exe with `-s` and `-c` flags? Tydra needs a flag to run a command on a page.
+Note the empty boxes above. This is WIP POC software. Help me fill those boxes!
 
 ## Install
 ### With nix
@@ -36,11 +22,11 @@ Maybe one exe with `-s` and `-c` flags? Tydra needs a flag to run a command on a
 
 #### Try
 
-`nix run github:edrex/notesdir`
+`nix run github:flakeflows/notesflow`
 
 #### Install
 
-`nix profile install github:edrex/notesdir`
+`nix profile install github:flakeflows/notesflow`
 
 ### As a bundle
 
@@ -56,58 +42,127 @@ notesdir
 
 The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
 
+## Roadmap
 
-## Milestones
-
-### M0
+### v0.0.0 menu
 
 - [x] tydra menu
    - [x] shell script to run
    - [x] gen menu from nix attrset via toYAML https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix
-- [x] launch background service on startup (tmux) first pass
-- [ ] (\`) shell (requires refactoring derivation)
 
-### M1
+### v0.0.1 shell
+- [x] `` ` `` shell (refactor derivation)
+- [x] start persistent env service manager (tmux instance) on first run
+  - [x] start emanote in tmux
+  - [ ] if tmux exits with a bad status, display error
+  - [ ] if emanote errs, display log
+- [x] `s` tmux attach (later this will be the services menu)
+- [x] `q` clean up background services and exit
 
-- [ ] (g)en
-- [ ] (/) search (fzf?) 
+### v0.0.2 editor
+- [ ] Figure out how to configure neovim without NixOS/Home-manager modules
+  - Crib from https://github.com/nix-community/neovim-nightly-overlay/pull/112/files
+  - https://github.com/jordanisaacs/neovim-flake
+- [ ] `e` launch nvim
+  - [ ] launch nvim server on first run
+- [ ] Shortcut to traverse wikilinks (ref https://github.com/srid/emanote/discussions/237#discussioncomment-2024104)
+- [ ] `, b` Backlinks (ask Emanote show, with Telescope)
 
-### Feature ideas
+### v0.0.3 modes
 
-## Functions
+See [](docs/v0.0.3.md)
+- [ ] `\` "global leader menu" (I think) [which-key](https://github.com/folke/which-key.nvim) not [nvim-libmodal](https://github.com/Iron-E/nvim-libmodal) but maybe both?
+- [ ] `\ /` find notes (telescope, basic)
 
-- [ ] https://github.com/mickael-menu/zk (menu)
-- [ ] neovim config
-- toggles
-- watcher (commit, push, etc)
-- Bundle a self-contained editor + config (neovim or evil emacs) (but also bring your own editor via env vars)
+## Planned
 
-## Proving out technology
+### linter
+- [ ] Interface: https://pre-commit.com/
+- [ ] Manage local repo hooks interactively
+- [ ] Emanote checks
+- [ ] Interactive resolvers?
 
-### Flakes
+### version control
 
-See https://zimbatm.com/notes/nixflakes for a concise intro to some of the important parts.
+- [ ] `b` branches
+  - [ ] `b` open a new draft branch
+  - [ ] `/` search branches
+  - [ ] `r` review change requests (`gh pr list`)
+
+### facetted search
+
+- [ ] `\ f` Facetted search
+  - [ ] Implementations research:
+    - emanote query (proposed) or `curl ${emanote_service}/-/export.json | jq ...` 
+    - facetted desktop search engine: (TODO: figure out persistent / cache dirs for index etc )
+      - https://www.lesbonscomptes.com/recoll/
+        - TODO: build on mac https://framagit.org/medoc92/recoll/-/blob/master/packaging/mac/make-recoll-dmg.sh
+        - https://www.lesbonscomptes.com/recoll/usermanual/webhelp/docs/RCL.SEARCH.COMMANDLINE.html
+    - Feed emanote into baloo?
+
+    -  https://github.com/mickael-menu/zk as facetting backend? Not sure it's adding beyond emanote, but worth testing.
+
+  - [ ] `/` push telescope onto mode stack (`ESC` returns to facets)
+    - [ ] `a` All notes (reset filters)
+    - [ ] `s` Statuses
+      - [ ] `w` Working copy `git status`
+      - [ ] `p` Published
+    - [ ] Tags
+    - [ ] By Type
+      - [ ] Markdown
+      - [ ] Ledger (https://www.ledger-cli.org/)
+      - [ ] Images
+      - [ ] Videos
+      - [ ] Audio
+      - [ ] Templates
+      - [ ] Metadata
+
+Candidates:
+
+### Ideas
+
+- Expose neovimConfig
+- Expose desktop files for terminal, browser
+- Call xdg-run et al
+
+
+
+## Flake.. Flows?
+
+[notesflow](https://github.com/flakeflows/notesflow) is a technology demonstration for a new method of composing interactive software environments, using [nix flakes](https://zimbatm.com/notes/nixflakes).
+
+Utility functions will be factored out into a flakeflow library, along with this section of the README.
+
+### Design Principles
+
+- Reliable:
+- Depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
+  - Adapt to the runtime: do the right thing on Linux, Docker, OSX, Android etc
+  - Provide comprehensible feedback on bad input.
+- Ergonomic:
+  - Efficiently flow through a network of related task modes.
+  - Discover all flows via root mode.
+- Composable, so you can sample [like Rza](https://www.youtube.com/watch?v=jSEs8-46Qlo)).
+
+### Technology demonstrations
 
 - [x] nix run (runnable)
 - [x] installable
-- [ ] shell
-  - [x] launch from menu
-  - [ ] set prompt to indicate status (starship or sim?)
-- [ ] how to run the shell via direnv
-- [ ] home manager
-- [ ] An example flake for bundling this with your own wiki ?
-- [ ] first party binary cache
-  - [ ] CI to populate
-  - [ ] Include with flake https://github.com/NixOS/nix/issues/5507
-
-### Mux
-
-- [x] auto launch dir-scoped singleton service manager with services on startup
-- [ ] Multi-pane env (ala emacs minibuffer etc) via tmux
-- [ ] show service+manager statuses (in menu, or maybe in a status line? emoji?)
-  - [ ] manage services from menu (stop, start, show)
-
-### Process
-
-- Feature branches / PRs for first party changes
-- Changelog workflow
+- [x] srid cache
+- [ ] ENV-based configuration
+  - [ ] Load `.env` in bootstrap script
+  - [ ] `BROWSER=`
+  - [ ] `CONTENT_VALIDATORS=` or something
+- [ ] Usable as a library in your own flake
+  - [ ] home manager module
+  - [ ] expose constructor as flake API
+- [ ] First party build cache
+  - [ ] CI builds
+  - [ ] Cache builds
+  - [ ] Add to flake
+ [ ] linux VM for linuxey stuff
+  - https://github.com/nix-community/nixos-generators (vm subcommand)
+  - https://github.com/lima-vm/lima
+  - Accelerated access to host FS? Esp inotify for baloo etc.
+    - https://github.com/lima-vm/lima/issues/20#issuecomment-845781236
+    - https://docs.docker.com/desktop/mac/release-notes/#docker-desktop-460
