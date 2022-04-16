@@ -27,11 +27,9 @@
           neovim-notes
         ];
         terminalBrowser = "${pkgs.links2}/bin/links";
-
-        
-
       in rec {
         lib = pkgs.callPackage ./lib.nix {};
+        # TODO: tydra module
         menu = lib.mkTydraMenu (import ./menu.nix { inherit terminalBrowser shellPkgs;});
         defaultApp = apps.main;
         defaultPackage = defaultApp.script;

@@ -11,34 +11,14 @@ Activity flows for your notes
 
 Note the empty boxes above. This is WIP POC software. Help me fill those boxes!
 
-## Install
-### With nix
-#### Preconditions
+## Quick Start
 
-- nix 2.5 or newer with `experimental-features = nix-command flakes`. See https://zimbatm.com/notes/nixflakes
-- To automatically use bundled binary cache:
-  - nix `2.7.1` (unreleased) or newer for [`nix run` support](https://github.com/NixOS/nix/issues/6170)
-  - Be listed in nix.conf `trusted-users` or nix running in single user mode.
+1. install nix 2.5 or newer
+2. add `experimental-features = nix-command flakes` to your nix config ([quick intro to flakes](https://zimbatm.com/notes/nixflakes))
+3. install: `nix profile install github:flakeflows/notesflow`
+4: run: `notesdir`
 
-#### Try
-
-`nix run github:flakeflows/notesflow`
-
-#### Install
-
-`nix profile install github:flakeflows/notesflow`
-
-### As a bundle
-
-TODO
-
-## Usage
-
-From your notes directory:
-
-```
-notesdir
-```
+Note: To use the bundled binary cache, you will need to be listed in your nix.conf `trusted-users` or have nix running in single user mode. Until nix 2.7.1 is released avoid `run` since it [doesn't use the cache](https://github.com/NixOS/nix/issues/6170)
 
 The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
 
@@ -60,11 +40,10 @@ The menu should be self-documenting. If you want to run something that's not in 
 - [x] `q` clean up background services and exit
 
 ### v0.0.2 editor
-- [ ] Figure out how to configure neovim without NixOS/Home-manager modules
-  - Crib from https://github.com/nix-community/neovim-nightly-overlay/pull/112/files
-  - https://github.com/jordanisaacs/neovim-flake
 - [ ] `e` launch nvim
   - [ ] launch nvim server on first run
+- [ ] Customize neovim config using https://github.com/syberant/nix-neovim/
+  - [ ] Add telescope, and a binding
 - [ ] Shortcut to traverse wikilinks (ref https://github.com/srid/emanote/discussions/237#discussioncomment-2024104)
 - [ ] `, b` Backlinks (ask Emanote show, with Telescope)
 
@@ -84,7 +63,7 @@ See [](docs/v0.0.3.md)
 
 ### version control
 
-- [ ] `b` branches
+- [ ] `b` branchesConfigurations
   - [ ] `b` open a new draft branch
   - [ ] `/` search branches
   - [ ] `r` review change requests (`gh pr list`)
@@ -98,10 +77,8 @@ See [](docs/v0.0.3.md)
       - https://www.lesbonscomptes.com/recoll/
         - TODO: build on mac https://framagit.org/medoc92/recoll/-/blob/master/packaging/mac/make-recoll-dmg.sh
         - https://www.lesbonscomptes.com/recoll/usermanual/webhelp/docs/RCL.SEARCH.COMMANDLINE.html
-    - Feed emanote into baloo?
-
-    -  https://github.com/mickael-menu/zk as facetting backend? Not sure it's adding beyond emanote, but worth testing.
-
+    - Feed emanote export into recoll?
+    - https://github.com/mickael-menu/zk as facetting backend? Not sure it's adding beyond emanote, but worth testing.
   - [ ] `/` push telescope onto mode stack (`ESC` returns to facets)
     - [ ] `a` All notes (reset filters)
     - [ ] `s` Statuses
@@ -173,3 +150,4 @@ Utility functions will be factored out into a flakeflow library, along with this
   - Accelerated access to host FS? Esp inotify for baloo etc.
     - https://github.com/lima-vm/lima/issues/20#issuecomment-845781236
     - https://docs.docker.com/desktop/mac/release-notes/#docker-desktop-460
+    - https://github.com/containers/krunvm looks like a winner
