@@ -94,60 +94,9 @@ See [](docs/v0.0.3.md)
       - [ ] Templates
       - [ ] Metadata
 
-### Composable
 
-This means:
-- Expose internal implementations so they can be used externally
-  - neovimConfig
-  - tydra menus
-  - desktop files for for builtin terminal, browser implementations
-  - library functions (extract where reuseful)
-- Allow the injection of dependencies (bring your own terminal launcher etc)
-  - At build-time, via the nix constructors
-  - At run-time, via ENV vars
-    - Maybe call xdg-run et al (this could be one build-time implementation of an "opener")
+## nvim research
 
-### Ideas
-
-- A utility function that does build-time evaluation or lazy runtime evaluation depending on a global flag. This would allow the whole system to be built lazy.
-
-## Flake.. Flows?
-
-[notesflow](https://github.com/flakeflows/notesflow) is a technology demonstration for a new method of composing interactive software environments, using [nix flakes](https://zimbatm.com/notes/nixflakes).
-
-Utility functions will be factored out into a flakeflow library, along with this section of the README.
-
-### Design Principles
-
-- Reliable:
-  - Depend minimally on the environment, and only in well-defined ways (`ENV`, `PWD`)
-  - Adapt to the runtime: do the right thing on Linux, Docker, OSX, Android etc
-  - Provide comprehensible feedback on bad input.
-- Ergonomic:
-  - Efficiently flow through a network of related task modes.
-  - Discover all flows via root mode.
-- Composable, so you can sample [like Rza](https://www.youtube.com/watch?v=jSEs8-46Qlo)).
-
-### Technology demonstrations
-
-- [x] nix run (runnable)
-- [x] installable
-- [x] srid cache
-- [ ] ENV-based configuration
-  - [ ] Load `.env` in bootstrap script
-  - [ ] `BROWSER=`
-  - [ ] `CONTENT_VALIDATORS=` or something
-- [ ] Usable as a library in your own flake
-  - [ ] expose constructor as flake API
-  - [ ] home manager module for registering services etc
-- [ ] First party build cache
-  - [ ] CI builds
-  - [ ] Cache builds
-  - [ ] Add to flake
- [ ] linux VM for linuxey stuff? Is this crazy pants?
-  - https://github.com/nix-community/nixos-generators (vm subcommand)
-  - https://github.com/lima-vm/lima
-  - Accelerated access to host FS? Esp inotify for baloo etc.
-    - https://github.com/lima-vm/lima/issues/20#issuecomment-845781236
-    - https://docs.docker.com/desktop/mac/release-notes/#docker-desktop-460
-    - https://github.com/containers/krunvm looks like a winner
+Needed packages
+ - git ui: neogit (magit clone) or lazygit
+ - https://github.com/pta2002/nixvim/issues/16
