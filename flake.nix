@@ -20,6 +20,7 @@
         in rec {
           nixpkgs = npkgs;
           emanote = emanote.defaultPackage.${system};
+          shellib = shellac.lib.${system};
           neovim-notes = nixpkgs.wrapNeovimUnstable nixpkgs.neovim-unwrapped
             (nixpkgs.neovimUtils.makeNeovimConfig {
               plugins = with nixpkgs.vimPlugins; [{ plugin = telescope-nvim; }];
@@ -28,10 +29,11 @@
         shellPkgs = with p.nixpkgs; [ tydra tmux emanote links2 p.neovim-notes ];
         terminalBrowser = "${p.nixpkgs.links2}/bin/links";
       in rec {
-        menu = shellac.lib.${system}.mkTydraMenu
+        menu = p.shellib.mkTydraMenu
           (import ./menu.nix { inherit terminalBrowser shellPkgs; });
         defaultApp = apps.main;
         defaultPackage = defaultApp.script;
+        # TODO: replace tmux with runit in shellac
         apps.main = p.nixpkgs.writeShellApplication {
           name = "notesflow";
           runtimeInputs = shellPkgs;
