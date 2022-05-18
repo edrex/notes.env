@@ -214,18 +214,6 @@
         "type": "indirect"
       }
     },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-7GSVLvfCJtH9dJ3om9Lg4fsi9UKvoxxR69gUTcx0ol8=",
-        "path": "/nix/store/0vww7zzdb9fmsr4h3m8anxk81xqw88if-source",
-        "type": "path"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      }
-    },
     "pandoc-link-context": {
       "flake": false,
       "locked": {
@@ -268,18 +256,12 @@
       }
     },
     "shellac": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": "nixpkgs_4"
-      },
       "locked": {
-        "lastModified": 1652833021,
-        "narHash": "sha256-qOT9/z3ehgpJJjuYi9KpeBeX8z0IlPV7i/d+HYLMokU=",
+        "lastModified": 1652875028,
+        "narHash": "sha256-84LvKbBQuUfylPmg3AF3HxVKdPDw5P9gpWfcaLFA/Os=",
         "owner": "edrex",
         "repo": "shellac",
-        "rev": "65041d5d1a6b274d99cd1c6a0c80b76202fb2996",
+        "rev": "73c12cfcfba032d0a26aba92a5e7c041aed3fd5b",
         "type": "github"
       },
       "original": {
