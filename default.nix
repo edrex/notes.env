@@ -11,12 +11,12 @@
     menu = shellStuff.mkTydraMenu
       (import ./menu.nix { inherit terminalBrowser shellPkgs; });
     # TODO: replace tmux with runit in shellac
-    shell = pkgs.writeShellApplication {
-      name = "notesflow";
+    app = pkgs.writeShellApplication rec {
+      name = "noteable";
       runtimeInputs = shellPkgs;
       text = ''
         # set -x
-        TMUX_SOCKET="notesflow.tmux.socket"
+        TMUX_SOCKET="${name}.tmux.socket"
         TMUX_SESSION="$(basename "$PWD")-$(echo "$PWD" | sha1sum | cut -f1 -d ' ')"
         SHELL="${"SHELL:-bash"}"
         export TMUX_SOCKET TMUX_SESSION

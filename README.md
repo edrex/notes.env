@@ -1,6 +1,23 @@
-# notesflow
+# Noteable
 
-Activity flows for your notes
+A prototype workflow shell for your notes.
+
+TODO: screenshot, link to asciinema
+
+## Install
+
+1. install nix
+2. add `experimental-features = nix-command flakes` to your nix config ([quick intro to flakes](https://zimbatm.com/notes/nixflakes))
+3. install: `nix profile install github:aquiferma/noteable`
+4: run: `noteable`
+
+Note: To use the bundled binary cache, you will need to be listed in your nix.conf `trusted-users` or have nix running in single user mode. 
+
+## Using 
+
+The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
+
+## Roadmap
 
 - [ ] Capture/edit (NeoVIM)
 - [ ] Preview/Browse (emanote)
@@ -9,37 +26,28 @@ Activity flows for your notes
 - [ ] Push
 - [ ] Review (linter, PR mod queue)
 
-Note the empty boxes above. This is WIP POC software. Help me fill those boxes!
+### Publishing
 
-## Quick Start
+- Script to sync a list of files/directories to another branch
+- Confirm added/removed/changed files or abort
+- Config file
 
-1. install nix 2.5 or newer
-2. add `experimental-features = nix-command flakes` to your nix config ([quick intro to flakes](https://zimbatm.com/notes/nixflakes))
-3. install: `nix profile install github:flakeflows/notesflow`
-4: run: `notesdir`
+```yaml
+publications:
+  - branch: techblog
+    selectors:
+      - /tech
+    confirm: true
+```
 
-Note: To use the bundled binary cache, you will need to be listed in your nix.conf `trusted-users` or have nix running in single user mode. Until nix 2.7.1 is released avoid `run` since it [doesn't use the cache](https://github.com/NixOS/nix/issues/6170)
+- Menu to install/check git hook
 
-The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
+### Service mgmt
 
-## Roadmap
+ - supervisor (runit I think)
+ - Need an `openport` script https://unix.stackexchange.com/questions/55913/whats-the-easiest-way-to-find-an-unused-local-port
 
-### v0.0.0 menu
-
-- [x] tydra menu
-   - [x] shell script to run
-   - [x] gen menu from nix attrset via toYAML https://github.com/NixOS/nixpkgs/blob/master/lib/generators.nix
-
-### v0.0.1 shell
-- [x] `` ` `` shell (refactor derivation)
-- [x] start persistent env service manager (tmux instance) on first run
-  - [x] start emanote in tmux
-  - [ ] if tmux exits with a bad status, display error
-  - [ ] if emanote errs, display log
-- [x] `s` tmux attach (later this will be the services menu)
-- [x] `q` clean up background services and exit
-
-### v0.0.2 editor
+### editor
 - [ ] `e` launch nvim
   - [ ] launch nvim server on first run
 - [ ] Customize neovim config using https://github.com/syberant/nix-neovim/
@@ -47,13 +55,10 @@ The menu should be self-documenting. If you want to run something that's not in 
 - [ ] Shortcut to traverse wikilinks (ref https://github.com/srid/emanote/discussions/237#discussioncomment-2024104)
 - [ ] `, b` Backlinks (ask Emanote show, with Telescope)
 
-### v0.0.3 modes
+### modes
 
-See [](docs/v0.0.3.md)
 - [ ] `\` "global leader menu" (I think) [which-key](https://github.com/folke/which-key.nvim) not [nvim-libmodal](https://github.com/Iron-E/nvim-libmodal) but maybe both?
 - [ ] `\ /` find notes (telescope, basic)
-
-## Planned
 
 ### linter
 - [ ] Interface: https://pre-commit.com/

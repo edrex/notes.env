@@ -19,7 +19,7 @@
           inherit pkgs shellac;
           emanote = emanote.defaultPackage.${system};
         };
-        defaultApp = lib.shell;
+        defaultApp = lib.app;
         defaultPackage = defaultApp;
         devShell = lib.devShell;
       });
