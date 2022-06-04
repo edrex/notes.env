@@ -13,7 +13,7 @@ TODO: screenshot, link to asciinema
 
 Note: To use the bundled binary cache, you will need to be listed in your nix.conf `trusted-users` or have nix running in single user mode. 
 
-## Using 
+## Usage
 
 The menu should be self-documenting. If you want to run something that's not in the menu, press \` for a shell.
 
@@ -29,8 +29,9 @@ The menu should be self-documenting. If you want to run something that's not in 
 ### Publishing
 
 - Script to sync a list of files/directories to another branch
+- Integration test
 - Confirm added/removed/changed files or abort
-- Config file
+- Config file https://www.w3schools.io/file/yaml-sample-example/
 
 ```yaml
 publications:

@@ -1,26 +1,31 @@
 {
   description = "A small software environment for your plain-text notes";
   inputs = {
-    flake-utils.url = github:numtide/flake-utils;
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs.follows = "nixpkgs";
     emanote.url = github:srid/emanote;
+    shellac.inputs.nixpkgs.follows = "nixpkgs";
     shellac.url = "github:edrex/shellac";
+    nixpkgs.url = "nixpkgs";
   };
   nixConfig = {
-    binaryCaches = [ "https://srid.cachix.org" ];
-    binaryCachePublicKeys =
-      [ "srid.cachix.org-1:MTQ6ksbfz3LBMmjyPh0PLmos+1x+CdtJxA/J2W+PQxI=" ];
+    extra-substituters = "https://cache.garnix.io";
+    extra-trusted-public-keys = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
   };
-  outputs = { self, nixpkgs, flake-utils, emanote, shellac, ... }@inputs:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system}; 
-      in rec {
+  outputs = { self, nixpkgs, flake-parts, shellac, ... }:
+    flake-parts.lib.mkFlake {inherit self; } {
+      systems = [ "x86_64-linux" ];
+      perSystem = { config, self', inputs', pkgs, system, ... }: let
         lib = import ./. {
           inherit pkgs shellac;
-          emanote = emanote.defaultPackage.${system};
+          emanote = inputs'.emanote.packages.default;
         };
-        defaultApp = lib.app;
-        defaultPackage = defaultApp;
-        devShell = lib.devShell;
-      });
+      in rec {
+        # Per-system attributes can be defined here. The self' and inputs'
+        # module parameters provide easy access to attributes of the same
+        # system.
+        packages.default = lib.app;
+        devShells.default = lib.devShell;
+      };
+    };
 }
