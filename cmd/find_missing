@@ -1,0 +1,4 @@
+#!/bin/sh
+
+curl -s http://localhost:8000/-/export.json|jq '.files | with_entries(.value |= [.links[] | select(.resolvedRelTarget.tag != "RRTFound") + {source: .key}])'
+# curl -s http://localhost:8000/-/export.json|jq '.files | with_entries(\\{key: .key value: [.value.links[] + {source: .key} | select(.resolvedRelTarget.tag != "RRTFound")])'
