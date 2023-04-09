@@ -7,6 +7,8 @@
 - Digital Garden
 - ... etc
 
+[TASKS](./TASKS.md) | [CHANGELOG](CHANGELOG.md)
+
 ## Who is this for?
 
 To enjoy this ride, you should be at least begrudgingly willing to open a terminal session and copy a few commands.
@@ -43,6 +45,8 @@ It's for people who have or want to create on-device sync'd note repositories in
 
 ## Prerequisites
 
+TODO: move this to [edrex/welcome-to-nix](https://github.com/edrex/welcome-to-nix)
+
 You'll need:
 
 - a willingness to type commands into a console, for 
@@ -50,25 +54,20 @@ You'll need:
 - [Nix Flakes](https://zimbatm.com/notes/nixflakes) installed
  - Mac, Linux: https://github.com/mschwaig/howto-install-nix-with-flake-support
  - Android: [nix-on-droid](https://github.com/t184256/nix-on-droid) (select "yes" when it asks if you want flake support)
- -  Windows 10+: Run under WSL, following Linux instructions. If you want a full NixOS install under WSL2, see [NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
-
-WARNING: 
+ -  Windows 10+: Run under WSL, following Linux instructions. If you want a full NixOS install under WSL2 (rather than using the default Ubuntu), read [NixOS-WSL](https://github.com/nix-community/NixOS-WSL).
 
 ### WARNING: Footguns
 
 :facepalm:
 
-Nix is full of [footguns](https://www.urbandictionary.com/define.php?term=footgun). If you get stuck trying to follow these instructions, open an issue here and I will help you get unstuck, and then we can improve documentation or fix things upstream.
+Please don't take my use of Nix in Notes.env as a recommendation that you learn Nix *the language*. The language has a **brutal** learning curve, and it will likely be several years before you know enough to use it well.
 
-Please don't take my use of Nix in Notes.env as a recommendation that you learn the Nix language. It has a brutal learning curve, and it will likely be several years before you know enough to be productive.
+I do however recommend learning the basics of Nix *the package manager*, because it will give you a super-power: to run any software on most platforms (sorry iOS-havers, your god doesn't want you to be free). The ONLY subcommands you need are:
 
-I do however recommend that you learn the basics of Nix the package manager, because it will give you super-powers. The ONLY subcommands you need are:
-
- - [`nix run`](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-run.html)
- - [`nix shell`]()
- - [`nix profile install/remove/upgrade`](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-profile-install.html) (but `remove` and `upgrade` have a footgun, see [nix#7960](https://github.com/NixOS/nix/issues/7960)).
-
-Eventually, Notes.env will provide platform-native builds (Android app, container image etc) which don't require Nix (milestone: grandparent-ready).
+- [`nix run`](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-run.html)
+- [`nix shell`](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-shell.html)
+- [`nix profile install/remove/upgrade`](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-profile-install.html)
+  - `remove` and `upgrade` have a footgun though, see [nix#7960](https://github.com/NixOS/nix/issues/7960)).
 
 ## Ways to use this
 
@@ -79,7 +78,7 @@ cd ~/my_markdown_notes_dir
 nix run github:edrex/notes.env
 ```
 
-After a some network IO, the Notes.env top level menu will present. Entry descriptions should provide sufficient documentation (submit a PR if you see ways to improve inline docs).
+After a some network IO, the Notes.env top-level menu will present. Entry descriptions should provide sufficient documentation (submit a PR if you see ways to improve inline docs).
 
 If you want to run something that's not in the menu, press \` for a shell.
 
@@ -95,6 +94,16 @@ This will add the menu and all bundled packages to your user environment.
 ### Using your own flake.nix
 
 TODO
+
+### Platform-native builds
+
+Eventually, Notes.env will provide platform-native builds (Android app, container image, Snap/Flatpak, etc) which don't require Nix (milestone: grandparent-ready).
+
+
+### Development
+
+- ./CHANGELOG.md
+- ./ROADMAP.md
 
 ## Next actions
 
@@ -139,7 +148,7 @@ which has the advantage of decoupling logic from the environment (ie helix, neov
 
 
 
-**Below this line is out of date and needs editing.**
+**Below this line needs editing.**
   
 -----
 
