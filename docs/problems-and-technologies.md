@@ -8,7 +8,7 @@ Tom has writing and social networking goals. They include
 - supporting other non-technical writers
 - moving text through a workflow
 - developing some experimental software for encouraging healthy and productive practices
-- hosting small and very small social networks and forums for writers - not all writing tools are devices or softwares; some are writing groups and networks of letters (just ask Mersenne)
+- hosting small and very small social networks and forums for writers - not all writing tools are devices or softwares; some are writing groups and networks of letters (just ask [Mersenne](http://emlo-portal.bodleian.ox.ac.uk/collections/?catalogue=marin-mersenne)
 - eventually, connecting to markets - print, digital sales, crypto, whatever
 
 For now I'm going to call my vision of a text assistant that helps me recur over my writing, the Text Looper.
